@@ -2,7 +2,7 @@
 
 ## Overview
 This repository contains two main scripts for building and exploring a TikTok engagement/virality prediction pipeline:
-
+![dash](https://github.com/user-attachments/assets/11cb67e3-05b4-47f0-9cab-42f223bf3e3e)
 - `tiktokpredict.py` — preprocesses data, trains or loads a model, runs predictions and saves results.
 - `final_dashboard.py` — interactive dashboard that visualizes data, model metrics and predictions.
 
