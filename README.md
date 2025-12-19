@@ -1,85 +1,74 @@
-# README
+# TikTok Trend Prediction
+
+Time-series forecasting of next week's trending hashtags and music.
+<img width="1135" height="669" alt="截屏2025-12-18 15 59 01" src="https://github.com/user-attachments/assets/1cf285ae-bef8-4b83-98b9-3193dd4b201f" />
+
 
 ## Overview
-This repository contains two main scripts for building and exploring a TikTok engagement/virality prediction pipeline:
-![dash](https://github.com/user-attachments/assets/11cb67e3-05b4-47f0-9cab-42f223bf3e3e)
-- `tiktokpredict.py` — preprocesses data, trains or loads a model, runs predictions and saves results.
-- `final_dashboard.py` — interactive dashboard that visualizes data, model metrics and predictions.
+
+Predicts which TikTok hashtags and music will trend next week using weekly aggregation and growth-based machine learning models.
+
+## Files
+
+- **`tiktokpredict.py`** - Main prediction model
+  - Aggregates 10K videos by week
+  - Engineers time-series features (lags, growth, acceleration)
+  - Trains Random Forest, Gradient Boosting, Logistic Regression
+  - Outputs top 15 predictions for next week
+
+- **`final_dashboard.py`** - HTML dashboard generator
+  - Runs predictions for each week
+  - Generates interactive single-file HTML
+  - Displays trend probabilities and growth metrics
+
+- **`data/tiktok_data_10000.csv`** - Dataset (24MB, 14 weeks)
+
+## Quick Start
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run prediction
+python tiktokpredict.py
+
+# Generate dashboard
+python final_dashboard.py
+```
+
+Open `tiktok_trend_dashboard.html` in browser.
+
+## Key Features
+
+- Filters generic hashtags (#fyp, #viral, #foryou)
+- Filters placeholder music titles ("Original Sound")
+- Uses growth momentum over absolute volume
+- 15 time-series features per item
+- Temporal validation (train on earlier weeks, test on later)
 
 ## Requirements
-- Python 3.8+
-- Common packages (install via `pip install -r requirements.txt`). Typical dependencies:
-    - pandas, numpy
-    - scikit-learn (or your chosen ML library)
-    - joblib (or pickle) for model serialization
-    - matplotlib / seaborn or plotly for visualizations
-    - streamlit (if dashboard is implemented with Streamlit) or dash/Flask if a different framework is used
 
-Add any project-specific packages to `requirements.txt`.
+```
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+plotly>=5.0.0
+datasets>=2.0.0
+```
 
-## Installation
-1. Clone the repo or place files in your working directory.
-2. Create and activate a virtual environment:
-     - python -m venv venv
-     - source venv/bin/activate (macOS / Linux) or `venv\Scripts\activate` (Windows)
-3. Install dependencies:
-     - pip install -r requirements.txt
+## Project Structure
 
-## tiktokpredict.py — what it does
-- Loads raw TikTok dataset (CSV/JSON) containing features such as captions, hashtags, video metadata, and engagement labels.
-- Runs preprocessing (cleaning, feature engineering, encoding).
-- Trains a model or loads a pre-trained model (configurable).
-- Produces predictions and evaluation metrics (train/validation scores, confusion matrix, feature importances).
-- Saves artifacts: model file (e.g., `model.pkl`), prediction CSV (e.g., `predictions.csv`) and a brief metrics JSON/log.
+```
+tiktok-trend-prediction/
+├── data/
+│   └── tiktok_data_10000.csv
+├── tiktokpredict.py
+├── final_dashboard.py
+├── tiktok_trend_dashboard.html
+├── requirements.txt
+└── README.md
+```
 
-How to run:
-- Example (train + predict):
-    - python tiktokpredict.py --input data/tiktok_raw.csv --output results/predictions.csv --model results/model.pkl --train
-- Example (use existing model to predict):
-    - python tiktokpredict.py --input data/new_videos.csv --model results/model.pkl --output results/predictions.csv
+## Course
 
-Common flags (adapt per implementation):
-- `--input` : path to input dataset
-- `--output` : path to save predictions
-- `--model` : model file to save/load
-- `--train` : flag to train a new model
-- `--config` : optional config file for hyperparameters
-
-Outputs produced:
-- predictions CSV with original rows plus prediction columns (probabilities, predicted label)
-- serialized model file (joblib/pickle)
-- metrics/log file (JSON or text)
-- optional figures (ROC, feature importance)
-
-## final_dashboard.py — what it does
-- Loads the prediction output and/or raw dataset and model metrics.
-- Provides interactive visualizations: timeline of engagement, distribution of predicted scores, confusion matrix, feature importance, filter by hashtag/author/date.
-- Meant to be run locally for analysis and presentation.
-
-How to run:
-- Streamlit example:
-    - streamlit run final_dashboard.py -- --data results/predictions.csv
-- Python script example (if self-hosted):
-    - python final_dashboard.py --data results/predictions.csv
-- Open the local address printed by the framework (e.g., http://localhost:8501 for Streamlit).
-
-Inputs required:
-- Predictions CSV (output from `tiktokpredict.py`)
-- Optional model metrics or artifacts folder
-
-Dashboard outputs:
-- Interactive plots and tables
-- Export options (CSV or image) depending on implementation
-- Summary report / dashboard snapshot export
-
-## Typical workflow
-1. Prepare raw data: data/tiktok_raw.csv
-2. Train and predict:
-     - python tiktokpredict.py --input data/tiktok_raw.csv --output results/predictions.csv --model results/model.pkl --train
-3. Explore results:
-     - streamlit run final_dashboard.py -- --data results/predictions.csv
-
-## Notes
-- Adjust CLI flags and dependency list if the scripts use different libraries or arguments.
-- Add a `requirements.txt` listing exact package versions for reproducibility.
-- Include sample input data and a small model artifact for quick demos.
+IEOR 242A - Applications in Data Analysis, UC Berkeley, Fall 2025
